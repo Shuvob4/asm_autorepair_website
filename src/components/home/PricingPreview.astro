@@ -1,0 +1,85 @@
+---
+import Card from '../shared/Card.astro';
+import SectionHeading from '../shared/SectionHeading.astro';
+import CTAButton from '../shared/CTAButton.astro';
+import pricing from '../../data/pricing.json';
+---
+
+<section class="pricing-preview" aria-labelledby="pricing-heading">
+  <div class="pricing-preview__container">
+    <SectionHeading>
+      <span id="pricing-heading">Transparent Pricing</span>
+    </SectionHeading>
+
+    <div class="pricing-preview__grid">
+      {pricing.map((item) => (
+        <Card class="pricing-preview__card">
+          <h3 class="pricing-preview__name">{item.name}</h3>
+          <p class="pricing-preview__price">
+            {item.unit === 'free' ? 'Free' : `from $${item.startingPrice}`}
+          </p>
+        </Card>
+      ))}
+    </div>
+
+    <div class="pricing-preview__cta">
+      <CTAButton variant="secondary" href="/services/">
+        View All Services &amp; Pricing
+      </CTAButton>
+    </div>
+  </div>
+</section>
+
+<style>
+  .pricing-preview {
+    padding: var(--space-xl) 0;
+    background-color: var(--color-white);
+  }
+
+  .pricing-preview__container {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+  }
+
+  .pricing-preview__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+
+  @media (min-width: 768px) {
+    .pricing-preview__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .pricing-preview__grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .pricing-preview__name {
+    font-family: var(--font-family);
+    font-size: var(--text-h4);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+    margin: 0 0 var(--space-xs) 0;
+    line-height: var(--line-height-heading);
+  }
+
+  .pricing-preview__price {
+    font-family: var(--font-family);
+    font-size: var(--text-h3);
+    font-weight: var(--font-weight-extrabold);
+    color: var(--color-accent);
+    margin: 0;
+    line-height: var(--line-height-heading);
+  }
+
+  .pricing-preview__cta {
+    margin-top: var(--space-lg);
+    text-align: center;
+  }
+</style>

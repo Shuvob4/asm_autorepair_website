@@ -1,0 +1,184 @@
+---
+// Individual post detail page — renders full post content
+// Requirements: 6.1, 6.2, 6.6, 6.7, 16.3
+import BaseLayout from '../../components/layout/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { formatDate } from '../../lib/format';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  return posts
+    .filter((post) => !post.data.draft)
+    .map((post) => ({
+      params: { slug: post.slug },
+      props: { post },
+    }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+const { title, publishedDate, featuredImage, author } = post.data;
+const formattedDate = formatDate(publishedDate);
+---
+
+<BaseLayout
+  title={`${title} · ASM AUTO Repair Toronto`}
+  description={post.data.excerpt || `${title} — Auto repair tips and news from ASM AUTO Repair in Toronto.`}
+  canonical={`https://asmautomotive.com/posts/${post.slug}`}
+  type="article"
+  publishedDate={publishedDate.toISOString()}
+>
+  <article class="post-detail">
+    <div class="container">
+      <header class="post-detail__header">
+        <h1 class="post-detail__title">{title}</h1>
+        <div class="post-detail__meta">
+          <time class="post-detail__date" datetime={publishedDate.toISOString()}>
+            {formattedDate}
+          </time>
+          {author && <span class="post-detail__author">by {author}</span>}
+        </div>
+      </header>
+
+      {featuredImage && (
+        <img
+          src={featuredImage}
+          alt={title}
+          class="post-detail__image"
+          width="800"
+          height="450"
+          loading="eager"
+        />
+      )}
+
+      <div class="post-detail__content">
+        <Content />
+      </div>
+
+      <footer class="post-detail__footer">
+        <a href="/posts" class="post-detail__back">&larr; Back to all posts</a>
+      </footer>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .post-detail {
+    padding: var(--space-xl) 0;
+  }
+
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+  }
+
+  .post-detail__header {
+    margin-bottom: var(--space-lg);
+  }
+
+  .post-detail__title {
+    font-family: var(--font-family);
+    font-size: var(--text-h1);
+    font-weight: var(--font-weight-extrabold);
+    line-height: var(--line-height-heading);
+    color: var(--color-primary);
+    margin-bottom: var(--space-sm);
+  }
+
+  .post-detail__meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-size: var(--text-small);
+    color: var(--color-secondary);
+  }
+
+  .post-detail__date {
+    font-weight: var(--font-weight-medium);
+  }
+
+  .post-detail__author {
+    font-style: italic;
+  }
+
+  .post-detail__image {
+    width: 100%;
+    height: auto;
+    border-radius: var(--border-radius);
+    margin-bottom: var(--space-lg);
+    object-fit: cover;
+  }
+
+  .post-detail__content {
+    font-family: var(--font-family);
+    font-size: var(--text-body);
+    line-height: var(--line-height-body);
+    color: var(--color-primary);
+  }
+
+  .post-detail__content :global(h2) {
+    font-size: var(--text-h2);
+    font-weight: var(--font-weight-bold);
+    margin-top: var(--space-lg);
+    margin-bottom: var(--space-sm);
+  }
+
+  .post-detail__content :global(h3) {
+    font-size: var(--text-h3);
+    font-weight: var(--font-weight-bold);
+    margin-top: var(--space-md);
+    margin-bottom: var(--space-sm);
+  }
+
+  .post-detail__content :global(p) {
+    margin-bottom: var(--space-sm);
+  }
+
+  .post-detail__content :global(ul),
+  .post-detail__content :global(ol) {
+    padding-left: var(--space-md);
+    margin-bottom: var(--space-sm);
+  }
+
+  .post-detail__content :global(li) {
+    margin-bottom: var(--space-xs);
+  }
+
+  .post-detail__content :global(a) {
+    color: var(--color-accent);
+    text-decoration: underline;
+    transition: color var(--transition-fast);
+  }
+
+  .post-detail__content :global(a:hover) {
+    color: var(--color-primary);
+  }
+
+  .post-detail__footer {
+    margin-top: var(--space-xl);
+    padding-top: var(--space-md);
+    border-top: var(--border);
+  }
+
+  .post-detail__back {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font-family);
+    font-size: var(--text-body);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-primary);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+
+  .post-detail__back:hover {
+    color: var(--color-accent);
+  }
+
+  .post-detail__back:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-radius: var(--border-radius-xs);
+  }
+</style>

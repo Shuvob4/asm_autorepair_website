@@ -1,0 +1,98 @@
+---
+import galleryImages from '../../data/gallery.json';
+---
+
+<section class="gallery-grid" aria-label="Photo gallery">
+  <div class="gallery-grid__container">
+    {galleryImages.map((image, index) => (
+      <div
+        class="gallery-grid__item"
+        data-gallery-index={index}
+        data-gallery-src={image.src}
+        role="button"
+        tabindex="0"
+        aria-label={`View full size: ${image.alt}`}
+      >
+        <img
+          src={image.src}
+          alt={image.alt}
+          width={image.width}
+          height={image.height}
+          loading="lazy"
+          class="gallery-grid__image"
+        />
+        <div class="gallery-grid__placeholder" aria-hidden="true"></div>
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  .gallery-grid {
+    width: 100%;
+  }
+
+  .gallery-grid__container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+
+  @media (min-width: 768px) {
+    .gallery-grid__container {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .gallery-grid__container {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .gallery-grid__item {
+    position: relative;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    cursor: pointer;
+    aspect-ratio: 4 / 3;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+  }
+
+  .gallery-grid__item:hover,
+  .gallery-grid__item:focus-visible {
+    transform: scale(1.02);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .gallery-grid__item:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  .gallery-grid__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    position: relative;
+    z-index: 1;
+  }
+
+  .gallery-grid__placeholder {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    z-index: 0;
+  }
+</style>
+
+<script>
+  // Image error handling: hide broken image and let placeholder show through
+  document.querySelectorAll('.gallery-grid__image').forEach((img) => {
+    img.addEventListener('error', () => {
+      (img as HTMLElement).style.display = 'none';
+    });
+  });
+</script>

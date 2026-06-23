@@ -1,0 +1,39 @@
+---
+/**
+ * SkipToContent — Accessibility skip link
+ * First focusable element on every page.
+ * Visually hidden by default, becomes visible on keyboard focus.
+ * Links to #main-content (the id on the <main> element in BaseLayout).
+ *
+ * Requirements: 17.5
+ */
+---
+
+<a href="#main-content" class="skip-to-content">
+  Skip to main content
+</a>
+
+<style>
+  .skip-to-content {
+    position: absolute;
+    top: -100%;
+    left: 0;
+    z-index: 9999;
+    padding: 12px 24px;
+    background-color: var(--color-primary, #0A0A0A);
+    color: var(--color-white, #FFFFFF);
+    font-family: var(--font-family, 'Inter', sans-serif);
+    font-size: var(--text-body, 16px);
+    font-weight: var(--font-weight-bold, 700);
+    text-decoration: none;
+    border-radius: 0 0 var(--border-radius-xs, 8px) 0;
+    outline: none;
+    transition: top var(--transition-fast, 150ms ease);
+  }
+
+  .skip-to-content:focus {
+    top: 0;
+    outline: 3px solid var(--color-accent, #F5C400);
+    outline-offset: 2px;
+  }
+</style>

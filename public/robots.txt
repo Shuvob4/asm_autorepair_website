@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://asmautomotive.com/sitemap-index.xml

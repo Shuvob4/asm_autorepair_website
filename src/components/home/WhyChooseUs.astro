@@ -1,0 +1,110 @@
+---
+import SectionHeading from '../shared/SectionHeading.astro';
+
+const differentiators = [
+  {
+    number: '15+',
+    title: 'Years of Experience',
+    text: 'Over a decade of trusted auto repair service in Toronto, building lasting relationships with our community.',
+  },
+  {
+    number: '🔬',
+    title: 'Latest Equipment',
+    text: 'State-of-the-art diagnostic tools and repair equipment to handle any vehicle issue accurately.',
+  },
+  {
+    number: '✓',
+    title: 'Done-Right Guarantee',
+    text: 'We stand behind our work. If it\u0027s not right the first time, we\u0027ll fix it at no extra cost.',
+  },
+  {
+    number: '★',
+    title: 'Above-Standard Service',
+    text: 'Customer-first approach with clear communication, honest pricing, and respect for your time.',
+  },
+];
+---
+
+<section class="why-choose-us" aria-labelledby="why-choose-us-heading">
+  <div class="why-choose-us__container">
+    <SectionHeading>
+      <span id="why-choose-us-heading">Why Choose Us</span>
+    </SectionHeading>
+
+    <div class="why-choose-us__grid">
+      {differentiators.map((item) => (
+        <div class="why-choose-us__item">
+          <span class="why-choose-us__icon" aria-hidden="true">{item.number}</span>
+          <h3 class="why-choose-us__title">{item.title}</h3>
+          <p class="why-choose-us__text">{item.text}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .why-choose-us {
+    padding: var(--space-xl) 0;
+    background-color: var(--color-primary);
+  }
+
+  .why-choose-us__container {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+  }
+
+  .why-choose-us :global(.section-heading__title) {
+    color: var(--color-white);
+  }
+
+  .why-choose-us__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+
+  @media (min-width: 768px) {
+    .why-choose-us__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .why-choose-us__grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .why-choose-us__item {
+    text-align: center;
+    padding: var(--space-md);
+  }
+
+  .why-choose-us__icon {
+    display: block;
+    font-size: 40px;
+    color: var(--color-accent);
+    margin-bottom: var(--space-sm);
+    font-weight: var(--font-weight-extrabold);
+  }
+
+  .why-choose-us__title {
+    font-family: var(--font-family);
+    font-size: var(--text-h4);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-white);
+    margin: 0 0 var(--space-xs) 0;
+    line-height: var(--line-height-heading);
+  }
+
+  .why-choose-us__text {
+    font-family: var(--font-family);
+    font-size: var(--text-body);
+    font-weight: var(--font-weight-regular);
+    color: var(--color-secondary);
+    margin: 0;
+    line-height: var(--line-height-body);
+  }
+</style>

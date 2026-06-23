@@ -1,0 +1,133 @@
+---
+import SectionHeading from '../shared/SectionHeading.astro';
+import CTAButton from '../shared/CTAButton.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  benefits: string[];
+  startingPrice?: number;
+  slug?: string;
+  image?: string;
+}
+
+const { title, description, benefits, startingPrice, slug, image } = Astro.props;
+const quoteHref = slug ? `/quote?service=${slug}` : '/quote';
+---
+
+<article class="service-detail">
+  <SectionHeading tag="h1">{title}</SectionHeading>
+
+  {image && (
+    <img
+      src={image}
+      alt={`${title} service at ASM AUTO Repair`}
+      class="service-detail__image"
+      width="800"
+      height="450"
+      loading="eager"
+    />
+  )}
+
+  <p class="service-detail__description">{description}</p>
+
+  <section class="service-detail__benefits" aria-label="Service benefits">
+    <h2 class="service-detail__benefits-heading">Key Benefits</h2>
+    <ul class="service-detail__benefits-list">
+      {benefits.map((benefit) => (
+        <li class="service-detail__benefit-item">
+          <svg class="service-detail__check-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" fill="currentColor" />
+          </svg>
+          <span>{benefit}</span>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  {startingPrice && (
+    <div class="service-detail__price">
+      <span class="service-detail__price-badge">From ${startingPrice}</span>
+    </div>
+  )}
+
+  <div class="service-detail__cta">
+    <CTAButton href={quoteHref}>Request a Quote</CTAButton>
+  </div>
+</article>
+
+<style>
+  .service-detail {
+    max-width: 800px;
+  }
+
+  .service-detail__image {
+    width: 100%;
+    height: auto;
+    border-radius: var(--border-radius);
+    margin-bottom: var(--space-lg);
+    object-fit: cover;
+  }
+
+  .service-detail__description {
+    font-size: var(--text-body);
+    font-weight: var(--font-weight-regular);
+    line-height: var(--line-height-body);
+    color: var(--color-primary);
+    margin-bottom: var(--space-lg);
+  }
+
+  .service-detail__benefits {
+    margin-bottom: var(--space-lg);
+  }
+
+  .service-detail__benefits-heading {
+    font-family: var(--font-family);
+    font-size: var(--text-h3);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-heading);
+    color: var(--color-primary);
+    margin-bottom: var(--space-md);
+  }
+
+  .service-detail__benefits-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  .service-detail__benefit-item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-xs);
+    font-size: var(--text-body);
+    line-height: var(--line-height-body);
+    color: var(--color-primary);
+  }
+
+  .service-detail__check-icon {
+    flex-shrink: 0;
+    margin-top: 4px;
+    color: var(--color-success);
+  }
+
+  .service-detail__price {
+    margin-bottom: var(--space-md);
+  }
+
+  .service-detail__price-badge {
+    display: inline-block;
+    padding: 8px 16px;
+    font-size: var(--text-body);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+    background-color: var(--color-accent);
+    border-radius: var(--border-radius-xs);
+  }
+
+  .service-detail__cta {
+    margin-top: var(--space-lg);
+  }
+</style>

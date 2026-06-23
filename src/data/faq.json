@@ -1,0 +1,7 @@
+[
+  { "question": "What payment methods do you accept?", "answer": "We accept cash, debit, Visa, Mastercard, and e-transfer for your convenience." },
+  { "question": "Do I need an appointment?", "answer": "While walk-ins are welcome, we recommend calling ahead or requesting a quote online to ensure availability and minimize your wait time." },
+  { "question": "Do you offer a warranty on repairs?", "answer": "Yes, all our repairs come with a warranty. The specific terms depend on the type of service performed — ask us for details when you bring in your vehicle." },
+  { "question": "How long do most repairs take?", "answer": "Simple services like oil changes take 30–60 minutes. More complex repairs vary — we'll give you an accurate estimate after diagnosing the issue." },
+  { "question": "How do I request a quote?", "answer": "You can request a free quote using our online form, call us at (416) 516-8181, or send us a message on WhatsApp. We typically respond within a few hours." }
+]

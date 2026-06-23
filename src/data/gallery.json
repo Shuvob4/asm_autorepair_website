@@ -1,0 +1,12 @@
+[
+  { "src": "/images/gallery/oil-change-explained.jpg", "alt": "Professional oil change service at ASM AUTO Repair Toronto", "width": 800, "height": 600, "category": "vehicles" },
+  { "src": "/images/gallery/break_repair.webp", "alt": "Brake repair and inspection service on vehicle", "width": 800, "height": 600, "category": "vehicles" },
+  { "src": "/images/gallery/engine_inspection.webp", "alt": "Engine inspection and diagnostics in progress", "width": 800, "height": 600, "category": "vehicles" },
+  { "src": "/images/gallery/electric_repair.webp", "alt": "Electrical system repair and wiring service", "width": 800, "height": 600, "category": "vehicles" },
+  { "src": "/images/gallery/transmission_service.jpg", "alt": "Transmission service and maintenance work", "width": 800, "height": 600, "category": "vehicles" },
+  { "src": "/images/gallery/suspension-repair.jpeg", "alt": "Suspension repair and component replacement", "width": 800, "height": 600, "category": "vehicles" },
+  { "src": "/images/gallery/ac_service.jpg", "alt": "Air conditioning service and refrigerant recharge", "width": 800, "height": 600, "category": "vehicles" },
+  { "src": "/images/gallery/tire_service.jpg", "alt": "Tire service including rotation and balancing", "width": 800, "height": 600, "category": "vehicles" },
+  { "src": "/images/gallery/general_maintainance.webp", "alt": "General vehicle maintenance and scheduled servicing", "width": 800, "height": 600, "category": "vehicles" },
+  { "src": "/images/gallery/pre-purchase-car-inspection-checklist.jpg", "alt": "Pre-purchase vehicle inspection checklist and evaluation", "width": 800, "height": 600, "category": "vehicles" }
+]

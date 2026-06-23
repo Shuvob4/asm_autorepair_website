@@ -1,0 +1,29 @@
+{
+  "name": "ASM AUTO Repair",
+  "address": {
+    "street": "296 Brock Ave",
+    "city": "Toronto",
+    "province": "ON",
+    "postal": "M6K 2M4",
+    "full": "296 Brock Ave, Toronto, ON M6K 2M4"
+  },
+  "phone": "+13435585301",
+  "phoneDisplay": "(343) 558-5301",
+  "email": "shuvobarman.sb4@gmail.com",
+  "whatsappUrl": "https://wa.me/13435585301",
+  "coordinates": { "lat": 43.6447, "lng": -79.4302 },
+  "hours": [
+    { "day": "Monday", "open": "10:00", "close": "19:00", "display": "10 a.m. – 7 p.m." },
+    { "day": "Tuesday", "open": "10:00", "close": "19:00", "display": "10 a.m. – 7 p.m." },
+    { "day": "Wednesday", "open": "10:00", "close": "19:00", "display": "10 a.m. – 7 p.m." },
+    { "day": "Thursday", "open": "10:00", "close": "19:00", "display": "10 a.m. – 7 p.m." },
+    { "day": "Friday", "open": "14:00", "close": "19:00", "display": "2 – 7 p.m." },
+    { "day": "Saturday", "open": "12:00", "close": "19:00", "display": "12 – 7 p.m." },
+    { "day": "Sunday", "open": null, "close": null, "display": "Closed" }
+  ],
+  "socialLinks": [
+    { "platform": "facebook", "url": "https://www.facebook.com/people/ASM-AUTO-Repair/61582253398296/", "label": "Facebook" },
+    { "platform": "google", "url": "https://g.co/kgs/ASMAutoRepair", "label": "Google Reviews" }
+  ],
+  "googleReview": { "rating": 4.4, "count": 93 }
+}

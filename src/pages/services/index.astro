@@ -1,0 +1,82 @@
+---
+// Services listing page — displays all service categories as cards
+// Requirements: 2.1, 2.2, 2.4, 16.3
+import BaseLayout from '../../components/layout/BaseLayout.astro';
+import ServiceCard from '../../components/services/ServiceCard.astro';
+import { getCollection } from 'astro:content';
+
+// Query all services and sort by order field (ascending)
+const services = (await getCollection('services')).sort(
+  (a, b) => a.data.order - b.data.order
+);
+---
+
+<BaseLayout
+  title="Auto Repair Services · ASM AUTO Repair Toronto"
+  description="Full-service auto repair in Toronto: brakes, engine, electrical, transmission, A/C, tires. Quality work guaranteed at 296 Brock Ave."
+  canonical="https://asmautomotive.com/services"
+>
+  <section class="services-listing">
+    <div class="container">
+      <h1 class="services-listing__heading">Our Services</h1>
+      <p class="services-listing__intro">
+        From routine maintenance to complex repairs, ASM AUTO Repair in Toronto provides 
+        expert auto care for all makes and models. Each service is backed by our 
+        done-right-the-first-time guarantee.
+      </p>
+      <div class="services-listing__grid">
+        {services.map((service) => (
+          <ServiceCard
+            title={service.data.title}
+            summary={service.data.summary}
+            slug={service.slug}
+            startingPrice={service.data.startingPrice}
+            headingLevel="h2"
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .services-listing {
+    padding: var(--space-xl) 0;
+  }
+
+  .container {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+  }
+
+  .services-listing__heading {
+    font-family: var(--font-family);
+    font-size: var(--text-h1);
+    font-weight: var(--font-weight-extrabold);
+    line-height: var(--line-height-heading);
+    color: var(--color-primary);
+    margin-bottom: var(--space-md);
+  }
+
+  .services-listing__intro {
+    font-size: var(--text-body);
+    font-weight: var(--font-weight-regular);
+    line-height: var(--line-height-body);
+    color: var(--color-secondary);
+    max-width: 640px;
+    margin-bottom: var(--space-lg);
+  }
+
+  .services-listing__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+
+  @media (min-width: 768px) {
+    .services-listing__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>

@@ -1,0 +1,256 @@
+---
+import businessInfo from '../../data/business-info.json';
+
+const currentYear = new Date().getFullYear();
+
+const navLinks = [
+  { label: 'Home', href: '/' },
+  { label: 'Services', href: '/services/' },
+  { label: 'About', href: '/about/' },
+  { label: 'Gallery', href: '/gallery/' },
+  { label: 'Contact', href: '/contact/' },
+  { label: 'Posts', href: '/posts/' },
+  { label: 'Quote', href: '/quote/' },
+];
+---
+
+<footer class="footer">
+  <div class="footer__inner container">
+    <!-- Business Hours Column -->
+    <div class="footer__column">
+      <h2 class="footer__heading">Business Hours</h2>
+      <ul class="footer__hours" role="list">
+        {businessInfo.hours.map((item) => (
+          <li class="footer__hours-item">
+            <span class="footer__hours-day">{item.day}</span>
+            <span class="footer__hours-time">{item.display}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <!-- Quick Links Column -->
+    <div class="footer__column">
+      <h2 class="footer__heading">Quick Links</h2>
+      <nav aria-label="Footer navigation">
+        <ul class="footer__nav" role="list">
+          {navLinks.map((link) => (
+            <li>
+              <a href={link.href} class="footer__nav-link">{link.label}</a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </div>
+
+    <!-- Contact Column -->
+    <div class="footer__column">
+      <h2 class="footer__heading">Contact Us</h2>
+      <address class="footer__contact">
+        <p class="footer__address">{businessInfo.address.full}</p>
+        <a href={`tel:${businessInfo.phone}`} class="footer__phone">
+          {businessInfo.phoneDisplay}
+        </a>
+        <a href={`mailto:${businessInfo.email}`} class="footer__email">
+          {businessInfo.email}
+        </a>
+      </address>
+    </div>
+
+    <!-- Social & WhatsApp Column -->
+    <div class="footer__column">
+      <h2 class="footer__heading">Connect</h2>
+      <ul class="footer__social" role="list">
+        {businessInfo.socialLinks.map((social) => (
+          <li>
+            <a
+              href={social.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="footer__social-link"
+              aria-label={`Visit us on ${social.label}`}
+            >
+              {social.label}
+            </a>
+          </li>
+        ))}
+        <li>
+          <a
+            href={businessInfo.whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="footer__social-link footer__social-link--whatsapp"
+            aria-label="Message us on WhatsApp"
+          >
+            WhatsApp
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Copyright -->
+  <div class="footer__bottom">
+    <p class="footer__copyright container">
+      &copy; {currentYear} ASM AUTO Repair. All rights reserved.
+    </p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    padding-block: var(--space-xl);
+  }
+
+  .footer__inner {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-lg);
+  }
+
+  .footer__column {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  .footer__heading {
+    font-size: var(--text-h4);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-white);
+    margin-bottom: var(--space-xs);
+    line-height: var(--line-height-heading);
+  }
+
+  /* Business Hours */
+  .footer__hours {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+  }
+
+  .footer__hours-item {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-sm);
+    font-size: var(--text-small);
+  }
+
+  .footer__hours-day {
+    color: var(--color-white);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .footer__hours-time {
+    color: var(--color-secondary);
+  }
+
+  /* Navigation */
+  .footer__nav {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+  }
+
+  .footer__nav-link {
+    color: var(--color-secondary);
+    text-decoration: none;
+    font-size: var(--text-body);
+    transition: color var(--transition-fast);
+  }
+
+  .footer__nav-link:hover,
+  .footer__nav-link:focus {
+    color: var(--color-accent);
+  }
+
+  /* Contact */
+  .footer__contact {
+    font-style: normal;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+  }
+
+  .footer__address {
+    color: var(--color-secondary);
+    font-size: var(--text-body);
+    line-height: var(--line-height-body);
+  }
+
+  .footer__phone,
+  .footer__email {
+    color: var(--color-white);
+    text-decoration: none;
+    font-size: var(--text-body);
+    transition: color var(--transition-fast);
+  }
+
+  .footer__phone:hover,
+  .footer__phone:focus,
+  .footer__email:hover,
+  .footer__email:focus {
+    color: var(--color-accent);
+  }
+
+  /* Social Links */
+  .footer__social {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+  }
+
+  .footer__social-link {
+    color: var(--color-secondary);
+    text-decoration: none;
+    font-size: var(--text-body);
+    transition: color var(--transition-fast);
+  }
+
+  .footer__social-link:hover,
+  .footer__social-link:focus {
+    color: var(--color-accent);
+  }
+
+  .footer__social-link--whatsapp:hover,
+  .footer__social-link--whatsapp:focus {
+    color: #25D366;
+  }
+
+  /* Copyright */
+  .footer__bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: var(--space-lg);
+    padding-top: var(--space-md);
+  }
+
+  .footer__copyright {
+    font-size: var(--text-small);
+    color: var(--color-secondary);
+    text-align: center;
+  }
+
+  /* Responsive: Tablet (2 columns) */
+  @media (max-width: 1023px) {
+    .footer__inner {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  /* Responsive: Mobile (single column) */
+  @media (max-width: 767px) {
+    .footer {
+      padding-block: var(--space-lg);
+    }
+
+    .footer__inner {
+      grid-template-columns: 1fr;
+      gap: var(--space-lg);
+    }
+  }
+</style>

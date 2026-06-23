@@ -1,0 +1,96 @@
+---
+import businessInfo from '../../data/business-info.json';
+
+const hours = businessInfo.hours;
+
+// Get current day name for highlighting (server-rendered default;
+// the OpenNowIndicator island can toggle the .today class at runtime)
+const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const today = days[new Date().getDay()];
+---
+
+<section class="business-hours" aria-label="Business Hours">
+  <h2 class="business-hours__title">Business Hours</h2>
+  <table class="business-hours__table" role="table">
+    <thead class="visually-hidden">
+      <tr>
+        <th scope="col">Day</th>
+        <th scope="col">Hours</th>
+      </tr>
+    </thead>
+    <tbody>
+      {hours.map((entry) => (
+        <tr
+          class:list={[
+            'business-hours__row',
+            { 'business-hours__row--today': entry.day === today },
+          ]}
+          data-day={entry.day}
+        >
+          <td class="business-hours__day">{entry.day}</td>
+          <td class="business-hours__time">
+            {entry.open ? entry.display : 'Closed'}
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</section>
+
+<style>
+  .business-hours {
+    padding: var(--space-md);
+  }
+
+  .business-hours__title {
+    font-family: var(--font-family);
+    font-size: var(--text-h4);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-heading);
+    margin-bottom: var(--space-sm);
+    color: var(--color-primary);
+  }
+
+  .business-hours__table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .business-hours__row {
+    border-bottom: var(--border);
+    transition: background-color var(--transition-fast);
+  }
+
+  .business-hours__row:last-child {
+    border-bottom: none;
+  }
+
+  .business-hours__row--today {
+    background-color: rgba(245, 196, 0, 0.08);
+    border-radius: var(--border-radius-xs);
+  }
+
+  .business-hours__day,
+  .business-hours__time {
+    padding: var(--space-xs) var(--space-sm);
+    font-size: var(--text-body);
+    line-height: var(--line-height-body);
+    color: var(--color-primary);
+  }
+
+  .business-hours__day {
+    font-weight: var(--font-weight-medium);
+    white-space: nowrap;
+  }
+
+  .business-hours__time {
+    text-align: right;
+    color: var(--color-secondary);
+  }
+
+  .business-hours__row--today .business-hours__day,
+  .business-hours__row--today .business-hours__time {
+    color: var(--color-primary);
+    font-weight: var(--font-weight-bold);
+  }
+</style>

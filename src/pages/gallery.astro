@@ -1,0 +1,79 @@
+---
+/**
+ * Gallery Page — Showcases shop work and facilities with a responsive image grid
+ * and interactive lightbox for fullscreen viewing.
+ *
+ * Requirements: 4.1, 4.2, 16.3
+ */
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import SectionHeading from '../components/shared/SectionHeading.astro';
+import GalleryGrid from '../components/gallery/GalleryGrid.astro';
+import Lightbox from '../components/gallery/Lightbox.tsx';
+import galleryImages from '../data/gallery.json';
+---
+
+<BaseLayout
+  title="Our Work · ASM AUTO Repair Toronto Gallery"
+  description="See our quality auto repair work and modern facilities at ASM AUTO Repair, 296 Brock Ave, Toronto."
+  canonical="https://asmautomotive.com/gallery/"
+>
+  <section class="gallery-page">
+    <div class="gallery-page__container">
+      <SectionHeading tag="h1">Our Work</SectionHeading>
+
+      <p class="gallery-page__intro">
+        Take a look at our modern facilities and the quality work we deliver every day.
+        From engine diagnostics to complete overhauls, these photos showcase the care and
+        precision our team brings to every vehicle that comes through our doors.
+      </p>
+
+      <GalleryGrid />
+
+      <Lightbox
+        client:visible
+        images={galleryImages.map(({ src, alt }) => ({ src, alt }))}
+      />
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  // Bridge GalleryGrid clicks to the Lightbox island via custom event
+  document.querySelectorAll('[data-gallery-index]').forEach((item) => {
+    const handler = () => {
+      const index = Number(item.getAttribute('data-gallery-index'));
+      document.dispatchEvent(
+        new CustomEvent('gallery:open', { detail: { index } })
+      );
+    };
+    item.addEventListener('click', handler);
+    item.addEventListener('keydown', (e) => {
+      if ((e as KeyboardEvent).key === 'Enter' || (e as KeyboardEvent).key === ' ') {
+        e.preventDefault();
+        handler();
+      }
+    });
+  });
+</script>
+
+<style>
+  .gallery-page {
+    padding: var(--space-xl) 0;
+  }
+
+  .gallery-page__container {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+  }
+
+  .gallery-page__intro {
+    font-family: var(--font-family);
+    font-size: var(--text-body);
+    font-weight: var(--font-weight-regular);
+    line-height: var(--line-height-body);
+    color: var(--color-secondary);
+    margin-bottom: var(--space-lg);
+    max-width: 680px;
+  }
+</style>

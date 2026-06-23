@@ -1,0 +1,6 @@
+[
+  { "icon": "shield", "label": "Done Right First Time", "description": "Guaranteed quality repairs with no comebacks" },
+  { "icon": "clock", "label": "Fast Turnaround", "description": "Most services completed same day" },
+  { "icon": "dollar", "label": "Transparent Pricing", "description": "No hidden fees or surprise charges" },
+  { "icon": "wrench", "label": "Latest Equipment", "description": "State-of-the-art diagnostic tools" }
+]

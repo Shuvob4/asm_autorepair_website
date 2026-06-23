@@ -1,0 +1,6 @@
+[
+  { "name": "Oil Change", "startingPrice": 49, "unit": "from" },
+  { "name": "Brake Inspection", "startingPrice": 0, "unit": "free" },
+  { "name": "Engine Diagnostics", "startingPrice": 89, "unit": "from" },
+  { "name": "A/C Recharge", "startingPrice": 129, "unit": "from" }
+]

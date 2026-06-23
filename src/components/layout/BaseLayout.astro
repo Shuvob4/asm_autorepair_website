@@ -1,0 +1,115 @@
+---
+/**
+ * BaseLayout — Main HTML shell used by all pages.
+ * Renders the full document structure: <html>, <head>, <body>.
+ * Integrates SEOHead, SkipToContent, Header, Footer, and FloatingCTA slots.
+ *
+ * Requirements: 14.1, 10.4, 18.3, 18.5, 17.5
+ */
+import SEOHead from '../shared/SEOHead.astro';
+import SkipToContent from './SkipToContent.astro';
+import Header from './Header.astro';
+import FloatingCTA from '../cta/FloatingCTA.astro';
+import MobileNav from './MobileNav.tsx';
+import '../../styles/global.css';
+import '../../styles/fonts.css';
+
+interface Props {
+  title: string;
+  description: string;
+  canonical: string;
+  ogImage?: string;
+  type?: 'website' | 'article';
+  publishedDate?: string;
+  includeJsonLd?: boolean;
+  transparentHeaderOnMobile?: boolean;
+}
+
+const {
+  title,
+  description,
+  canonical,
+  ogImage,
+  type,
+  publishedDate,
+  includeJsonLd,
+  transparentHeaderOnMobile = false,
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0A0A0A" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link
+      rel="preload"
+      href="/fonts/inter-latin-var.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link rel="preconnect" href="https://www.google.com" />
+    <link rel="dns-prefetch" href="https://maps.googleapis.com" />
+    <SEOHead
+      title={title}
+      description={description}
+      canonical={canonical}
+      ogImage={ogImage}
+      type={type}
+      publishedDate={publishedDate}
+      includeJsonLd={includeJsonLd}
+    />
+  </head>
+  <body>
+    <SkipToContent />
+
+    <Header transparentOnMobile={transparentHeaderOnMobile}>
+      <MobileNav client:load />
+    </Header>
+
+    <main id="main-content">
+      <slot />
+    </main>
+
+    <!-- Footer placeholder — will be replaced by Footer.astro component in task 7.7 -->
+    <footer class="site-footer">
+      <div class="container">
+        <p>&copy; {new Date().getFullYear()} ASM AUTO Repair. All rights reserved.</p>
+        <p>296 Brock Ave, Toronto, ON M6K 2M4 · (416) 516-8181</p>
+      </div>
+    </footer>
+
+    <FloatingCTA />
+  </body>
+</html>
+
+<style>
+  .site-footer {
+    background-color: var(--color-primary);
+    color: var(--color-secondary);
+    padding: var(--space-xl) 0;
+    font-family: var(--font-family);
+    font-size: var(--text-small);
+    text-align: center;
+  }
+
+  .site-footer p {
+    margin: var(--space-xs) 0;
+  }
+
+  .container {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+  }
+
+  /* Add bottom padding on mobile to prevent FloatingCTA from overlapping page content */
+  @media (max-width: 768px) {
+    body {
+      padding-bottom: 80px;
+    }
+  }
+</style>

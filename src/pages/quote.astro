@@ -1,0 +1,95 @@
+---
+/**
+ * Quote Page — Request a free auto repair estimate.
+ * Requirements: 7.1, 16.3, 15.3
+ */
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import QuoteForm from '../components/quote/QuoteForm.tsx';
+import FeatureFlag from '../components/shared/FeatureFlag.astro';
+---
+
+<BaseLayout
+  title="Request a Quote · ASM AUTO Repair Toronto"
+  description="Get a free auto repair estimate from ASM AUTO Repair Toronto. Submit your vehicle details online."
+  canonical="https://asmautomotive.com/quote/"
+>
+  <section class="quote-page">
+    <div class="quote-page__container">
+      <h1 class="quote-page__heading">Request a Free Quote</h1>
+      <p class="quote-page__intro">
+        Fill out the form below with your vehicle details and the type of service you need.
+        Our team will review your request and get back to you with an estimate within 1 business day.
+        You can also reach us directly via WhatsApp for faster communication.
+      </p>
+      <QuoteForm client:load />
+
+      <!-- Phase 3: Subscribe to service reminders (hidden until FEATURE_EMAIL_ENABLED=true) -->
+      <FeatureFlag feature="email">
+        <section class="quote-page__reminders">
+          <h2 class="quote-page__reminders-heading">Subscribe to Service Reminders</h2>
+          <!-- Phase 3: Email reminder subscription will be rendered here -->
+          <p class="quote-page__reminders-text">
+            Get automatic reminders for oil changes, tire rotations, and scheduled maintenance.
+            Coming soon.
+          </p>
+        </section>
+      </FeatureFlag>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .quote-page {
+    padding: var(--space-xl) 0;
+  }
+
+  .quote-page__container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+  }
+
+  .quote-page__heading {
+    font-family: var(--font-family);
+    font-size: var(--text-h1);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-heading);
+    color: var(--color-primary);
+    margin-bottom: var(--space-md);
+  }
+
+  .quote-page__intro {
+    font-family: var(--font-family);
+    font-size: var(--text-body);
+    font-weight: var(--font-weight-regular);
+    line-height: var(--line-height-body);
+    color: var(--color-secondary);
+    margin-bottom: var(--space-lg);
+    max-width: 65ch;
+  }
+
+  .quote-page__reminders {
+    margin-top: var(--space-xl);
+    padding: var(--space-md);
+    border: var(--border);
+    border-radius: var(--border-radius);
+    background-color: var(--color-white);
+  }
+
+  .quote-page__reminders-heading {
+    font-family: var(--font-family);
+    font-size: var(--text-h3);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-heading);
+    color: var(--color-primary);
+    margin-bottom: var(--space-sm);
+  }
+
+  .quote-page__reminders-text {
+    font-family: var(--font-family);
+    font-size: var(--text-body);
+    font-weight: var(--font-weight-regular);
+    line-height: var(--line-height-body);
+    color: var(--color-secondary);
+  }
+</style>

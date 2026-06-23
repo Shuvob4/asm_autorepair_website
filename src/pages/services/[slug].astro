@@ -1,0 +1,91 @@
+---
+// Dynamic service detail page — renders a full service page per slug
+// Requirements: 2.1, 2.2, 2.4, 16.3
+import BaseLayout from '../../components/layout/BaseLayout.astro';
+import ServiceDetail from '../../components/services/ServiceDetail.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const services = await getCollection('services');
+  return services.map((service) => ({
+    params: { slug: service.slug },
+    props: { service },
+  }));
+}
+
+const { service } = Astro.props;
+const { Content } = await service.render();
+const { title, description, benefits, startingPrice, image } = service.data;
+const slug = service.slug;
+---
+
+<BaseLayout
+  title={`${title} · ASM AUTO Repair Toronto`}
+  description={`${description.slice(0, 140)}${description.length > 140 ? '…' : ''}`}
+  canonical={`https://asmautomotive.com/services/${slug}`}
+>
+  <section class="service-page">
+    <div class="container">
+      <ServiceDetail
+        title={title}
+        description={description}
+        benefits={benefits}
+        startingPrice={startingPrice}
+        slug={slug}
+        image={image}
+      />
+      <div class="service-page__content">
+        <Content />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .service-page {
+    padding: var(--space-xl) 0;
+  }
+
+  .container {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+  }
+
+  .service-page__content {
+    max-width: 800px;
+    margin-top: var(--space-lg);
+    font-family: var(--font-family);
+    font-size: var(--text-body);
+    line-height: var(--line-height-body);
+    color: var(--color-primary);
+  }
+
+  .service-page__content :global(h2) {
+    font-size: var(--text-h2);
+    font-weight: var(--font-weight-bold);
+    margin-top: var(--space-lg);
+    margin-bottom: var(--space-sm);
+  }
+
+  .service-page__content :global(h3) {
+    font-size: var(--text-h3);
+    font-weight: var(--font-weight-bold);
+    margin-top: var(--space-md);
+    margin-bottom: var(--space-sm);
+  }
+
+  .service-page__content :global(p) {
+    margin-bottom: var(--space-sm);
+  }
+
+  .service-page__content :global(ul),
+  .service-page__content :global(ol) {
+    padding-left: var(--space-md);
+    margin-bottom: var(--space-sm);
+  }
+
+  .service-page__content :global(li) {
+    margin-bottom: var(--space-xs);
+  }
+</style>

@@ -1,0 +1,12 @@
+---
+import { isFeatureEnabled } from '../../lib/feature-flags';
+
+interface Props {
+  feature: 'booking' | 'email';
+}
+
+const { feature } = Astro.props;
+const enabled = isFeatureEnabled(feature);
+---
+
+{enabled && <slot />}

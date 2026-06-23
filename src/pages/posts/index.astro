@@ -1,0 +1,107 @@
+---
+// Posts listing page — displays all published posts newest-first
+// Requirements: 6.1, 6.2, 6.6, 6.7, 16.3
+import BaseLayout from '../../components/layout/BaseLayout.astro';
+import PostCard from '../../components/posts/PostCard.astro';
+import Pagination from '../../components/posts/Pagination.astro';
+import { getCollection } from 'astro:content';
+
+// Query all posts, filter out drafts, sort newest-first
+const allPosts = await getCollection('posts');
+const posts = allPosts
+  .filter((post) => !post.data.draft)
+  .sort((a, b) => b.data.publishedDate.getTime() - a.data.publishedDate.getTime());
+
+// Pagination setup (10 posts per page, show all for now since < 10 posts)
+const postsPerPage = 10;
+const totalPages = Math.ceil(posts.length / postsPerPage);
+const currentPage = 1;
+const paginatedPosts = posts.slice(0, postsPerPage);
+---
+
+<BaseLayout
+  title="News & Tips · ASM AUTO Repair Toronto Blog"
+  description="Auto repair tips, maintenance guides, and shop news from ASM AUTO Repair in Toronto. Stay informed with our latest updates."
+  canonical="https://asmautomotive.com/posts"
+>
+  <section class="posts-listing">
+    <div class="container">
+      <h1 class="posts-listing__heading">News & Tips</h1>
+      <p class="posts-listing__intro">
+        Stay up to date with the latest auto repair tips, maintenance guides, and news from ASM AUTO Repair in Toronto.
+      </p>
+
+      {paginatedPosts.length > 0 ? (
+        <div class="posts-listing__grid">
+          {paginatedPosts.map((post) => (
+            <PostCard
+              title={post.data.title}
+              slug={post.slug}
+              publishedDate={post.data.publishedDate}
+              featuredImage={post.data.featuredImage}
+              excerpt={post.data.excerpt}
+              headingLevel="h2"
+            />
+          ))}
+        </div>
+      ) : (
+        <p class="posts-listing__empty">No posts available yet.</p>
+      )}
+
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        baseUrl="/posts"
+      />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .posts-listing {
+    padding: var(--space-xl) 0;
+  }
+
+  .container {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+  }
+
+  .posts-listing__heading {
+    font-family: var(--font-family);
+    font-size: var(--text-h1);
+    font-weight: var(--font-weight-extrabold);
+    line-height: var(--line-height-heading);
+    color: var(--color-primary);
+    margin-bottom: var(--space-md);
+  }
+
+  .posts-listing__intro {
+    font-size: var(--text-body);
+    font-weight: var(--font-weight-regular);
+    line-height: var(--line-height-body);
+    color: var(--color-secondary);
+    max-width: 640px;
+    margin-bottom: var(--space-lg);
+  }
+
+  .posts-listing__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+
+  .posts-listing__empty {
+    font-size: var(--text-body);
+    color: var(--color-secondary);
+    text-align: center;
+    padding: var(--space-xl) 0;
+  }
+
+  @media (min-width: 768px) {
+    .posts-listing__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>

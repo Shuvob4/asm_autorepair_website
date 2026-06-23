@@ -1,0 +1,159 @@
+---
+interface Props {
+  currentPage: number;
+  totalPages: number;
+  baseUrl: string;
+}
+
+const { currentPage, totalPages, baseUrl } = Astro.props;
+
+// Build page URL: page 1 = baseUrl, page N = baseUrl + N + "/"
+function getPageUrl(page: number): string {
+  if (page === 1) {
+    return baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
+  }
+  const base = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
+  return `${base}${page}/`;
+}
+
+const prevPage = currentPage > 1 ? currentPage - 1 : null;
+const nextPage = currentPage < totalPages ? currentPage + 1 : null;
+
+// Generate page numbers array
+const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+---
+
+{totalPages > 1 && (
+  <nav class="pagination" aria-label="Posts pagination">
+    <ul class="pagination__list">
+      <li class="pagination__item">
+        {prevPage ? (
+          <a
+            href={getPageUrl(prevPage)}
+            class="pagination__link pagination__link--prev"
+            aria-label={`Go to previous page, page ${prevPage}`}
+          >
+            &larr; Previous
+          </a>
+        ) : (
+          <span class="pagination__link pagination__link--prev pagination__link--disabled" aria-hidden="true">
+            &larr; Previous
+          </span>
+        )}
+      </li>
+
+      {pages.map((page) => (
+        <li class="pagination__item">
+          {page === currentPage ? (
+            <span
+              class="pagination__link pagination__link--current"
+              aria-current="page"
+              aria-label={`Page ${page}, current page`}
+            >
+              {page}
+            </span>
+          ) : (
+            <a
+              href={getPageUrl(page)}
+              class="pagination__link pagination__link--number"
+              aria-label={`Go to page ${page}`}
+            >
+              {page}
+            </a>
+          )}
+        </li>
+      ))}
+
+      <li class="pagination__item">
+        {nextPage ? (
+          <a
+            href={getPageUrl(nextPage)}
+            class="pagination__link pagination__link--next"
+            aria-label={`Go to next page, page ${nextPage}`}
+          >
+            Next &rarr;
+          </a>
+        ) : (
+          <span class="pagination__link pagination__link--next pagination__link--disabled" aria-hidden="true">
+            Next &rarr;
+          </span>
+        )}
+      </li>
+    </ul>
+  </nav>
+)}
+
+<style>
+  .pagination {
+    margin-top: var(--space-lg);
+    display: flex;
+    justify-content: center;
+  }
+
+  .pagination__list {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .pagination__link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: var(--touch-min);
+    min-height: var(--touch-min);
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--border-radius-xs);
+    font-family: var(--font-family);
+    font-size: var(--text-body);
+    font-weight: var(--font-weight-medium);
+    text-decoration: none;
+    transition: background-color var(--transition-fast), color var(--transition-fast);
+  }
+
+  .pagination__link--number,
+  .pagination__link--prev,
+  .pagination__link--next {
+    color: var(--color-primary);
+    border: var(--border);
+    background: var(--color-white);
+  }
+
+  a.pagination__link:hover {
+    background: var(--color-primary);
+    color: var(--color-white);
+    border-color: var(--color-primary);
+  }
+
+  a.pagination__link:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  .pagination__link--current {
+    background: var(--color-primary);
+    color: var(--color-white);
+    border: 1px solid var(--color-primary);
+    font-weight: var(--font-weight-bold);
+  }
+
+  .pagination__link--disabled {
+    color: var(--color-secondary);
+    border-color: var(--color-border);
+    background: var(--color-white);
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  @media (max-width: 767px) {
+    .pagination__link--number {
+      min-width: 40px;
+      padding: var(--space-xs);
+    }
+  }
+</style>

@@ -1,0 +1,40 @@
+---
+interface Props {
+  tag?: 'h1' | 'h2' | 'h3';
+  class?: string;
+}
+
+const { tag: Tag = 'h2', class: className } = Astro.props;
+---
+
+<div class:list={['section-heading', className]}>
+  <Tag class="section-heading__title">
+    <slot />
+  </Tag>
+  <slot name="subtitle" />
+</div>
+
+<style>
+  .section-heading {
+    margin-bottom: var(--space-lg);
+  }
+
+  .section-heading__title {
+    font-family: var(--font-family);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-heading);
+    color: var(--color-primary);
+  }
+
+  h1.section-heading__title {
+    font-size: var(--text-h1);
+  }
+
+  h2.section-heading__title {
+    font-size: var(--text-h2);
+  }
+
+  h3.section-heading__title {
+    font-size: var(--text-h3);
+  }
+</style>

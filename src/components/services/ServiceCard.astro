@@ -1,0 +1,102 @@
+---
+import Card from '../shared/Card.astro';
+
+interface Props {
+  title: string;
+  summary: string;
+  slug: string;
+  startingPrice?: number;
+  headingLevel?: 'h2' | 'h3';
+}
+
+const { title, summary, slug, startingPrice, headingLevel = 'h3' } = Astro.props;
+const Heading = headingLevel;
+---
+
+<Card class="service-card">
+  <Heading class="service-card__title">{title}</Heading>
+  <p class="service-card__summary">{summary}</p>
+  <div class="service-card__footer">
+    {startingPrice ? (
+      <span class="service-card__price">From {'$'}{startingPrice}</span>
+    ) : (
+      <span></span>
+    )}
+    <a href={`/services/${slug}`} class="service-card__link">
+      Learn More
+      <span class="visually-hidden">about {title}</span>
+    </a>
+  </div>
+</Card>
+
+<style>
+  .service-card__title {
+    font-family: var(--font-family);
+    font-size: var(--text-h3);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-heading);
+    color: var(--color-primary);
+    margin-bottom: var(--space-sm);
+  }
+
+  .service-card__summary {
+    font-size: var(--text-body);
+    font-weight: var(--font-weight-regular);
+    line-height: var(--line-height-body);
+    color: var(--color-secondary);
+    margin-bottom: var(--space-sm);
+    flex: 1;
+  }
+
+  .service-card__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+    margin-top: auto;
+  }
+
+  .service-card__price {
+    display: inline-block;
+    padding: 4px 12px;
+    font-size: var(--text-small);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+    background-color: var(--color-accent);
+    border-radius: var(--border-radius-xs);
+  }
+
+  .service-card__link {
+    display: inline-flex;
+    align-items: center;
+    font-size: var(--text-body);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-primary);
+    text-decoration: none;
+    min-height: var(--touch-min);
+    white-space: nowrap;
+    transition: color var(--transition-fast);
+  }
+
+  .service-card__link:hover {
+    color: var(--color-accent);
+  }
+
+  .service-card__link:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-radius: var(--border-radius-xs);
+  }
+
+  @media (max-width: 767px) {
+    :global(.service-card) {
+      border-radius: var(--border-radius);
+      border: 1px solid var(--color-border);
+    }
+  }
+
+  :global(.service-card) {
+    display: flex;
+    flex-direction: column;
+  }
+</style>

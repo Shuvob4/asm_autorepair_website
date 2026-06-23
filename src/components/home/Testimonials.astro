@@ -1,0 +1,91 @@
+---
+import Card from '../shared/Card.astro';
+import SectionHeading from '../shared/SectionHeading.astro';
+import testimonials from '../../data/testimonials.json';
+---
+
+<section class="testimonials" aria-labelledby="testimonials-heading">
+  <div class="testimonials__container">
+    <SectionHeading>
+      <span id="testimonials-heading">What Our Customers Say</span>
+    </SectionHeading>
+
+    <div class="testimonials__grid">
+      {testimonials.map((testimonial) => (
+        <Card class="testimonials__card">
+          <div class="testimonials__stars" aria-label={`${testimonial.rating} out of 5 stars`}>
+            {Array.from({ length: 5 }).map((_, i) => (
+              <span class={i < testimonial.rating ? 'star star--filled' : 'star'}>★</span>
+            ))}
+          </div>
+          <blockquote class="testimonials__text">
+            "{testimonial.text}"
+          </blockquote>
+          <p class="testimonials__name">— {testimonial.name}</p>
+        </Card>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .testimonials {
+    padding: var(--space-xl) 0;
+    background-color: var(--color-primary);
+  }
+
+  .testimonials__container {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+  }
+
+  .testimonials :global(.section-heading__title) {
+    color: var(--color-white);
+  }
+
+  .testimonials__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+
+  @media (min-width: 768px) {
+    .testimonials__grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .testimonials__stars {
+    margin-bottom: var(--space-sm);
+  }
+
+  .star {
+    font-size: 20px;
+    color: var(--color-border);
+  }
+
+  .star--filled {
+    color: var(--color-accent);
+  }
+
+  .testimonials__text {
+    font-family: var(--font-family);
+    font-size: var(--text-body);
+    font-weight: var(--font-weight-regular);
+    color: var(--color-secondary);
+    line-height: var(--line-height-body);
+    margin: 0 0 var(--space-sm) 0;
+    font-style: italic;
+    border: none;
+    padding: 0;
+  }
+
+  .testimonials__name {
+    font-family: var(--font-family);
+    font-size: var(--text-small);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-primary);
+    margin: 0;
+  }
+</style>

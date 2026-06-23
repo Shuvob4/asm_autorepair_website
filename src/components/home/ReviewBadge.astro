@@ -1,0 +1,115 @@
+---
+import businessInfo from '../../data/business-info.json';
+
+const googleReview = businessInfo.googleReview;
+
+// Hide if data is null, missing, or invalid
+const isValid = googleReview
+  && typeof googleReview.rating === 'number'
+  && googleReview.rating > 0
+  && googleReview.rating <= 5
+  && typeof googleReview.count === 'number'
+  && googleReview.count > 0;
+
+const rating = isValid ? googleReview.rating : 0;
+const count = isValid ? googleReview.count : 0;
+const fullStars = Math.floor(rating);
+const hasHalfStar = rating - fullStars >= 0.3;
+const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+---
+
+{isValid && (
+  <div class="review-badge" aria-label={`Google rating: ${rating} out of 5 stars based on ${count} reviews`}>
+    <div class="review-badge__inner">
+      <span class="review-badge__label">Google Reviews</span>
+      <div class="review-badge__rating">
+        <span class="review-badge__score">{rating}</span>
+        <span class="review-badge__max">/ 5</span>
+      </div>
+      <div class="review-badge__stars" aria-hidden="true">
+        {Array.from({ length: fullStars }).map(() => (
+          <span class="star star--filled">★</span>
+        ))}
+        {hasHalfStar && <span class="star star--half">★</span>}
+        {Array.from({ length: emptyStars }).map(() => (
+          <span class="star">★</span>
+        ))}
+      </div>
+      <span class="review-badge__count">Based on {count} reviews</span>
+    </div>
+  </div>
+)}
+
+<style>
+  .review-badge {
+    padding: var(--space-lg) 0;
+    text-align: center;
+  }
+
+  .review-badge__inner {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: var(--space-md) var(--space-lg);
+    border-radius: var(--border-radius);
+    border: var(--border);
+    background: var(--color-white);
+  }
+
+  .review-badge__label {
+    font-family: var(--font-family);
+    font-size: var(--text-small);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .review-badge__rating {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+  }
+
+  .review-badge__score {
+    font-family: var(--font-family);
+    font-size: var(--text-h1);
+    font-weight: var(--font-weight-extrabold);
+    color: var(--color-primary);
+    line-height: 1;
+  }
+
+  .review-badge__max {
+    font-family: var(--font-family);
+    font-size: var(--text-h4);
+    font-weight: var(--font-weight-regular);
+    color: var(--color-secondary);
+  }
+
+  .review-badge__stars {
+    display: flex;
+    gap: 2px;
+  }
+
+  .star {
+    font-size: 24px;
+    color: var(--color-border);
+  }
+
+  .star--filled {
+    color: var(--color-accent);
+  }
+
+  .star--half {
+    color: var(--color-accent);
+    opacity: 0.6;
+  }
+
+  .review-badge__count {
+    font-family: var(--font-family);
+    font-size: var(--text-small);
+    font-weight: var(--font-weight-regular);
+    color: var(--color-secondary);
+  }
+</style>

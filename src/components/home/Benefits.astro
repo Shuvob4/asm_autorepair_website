@@ -1,0 +1,84 @@
+---
+import SectionHeading from '../shared/SectionHeading.astro';
+import benefits from '../../data/benefits.json';
+
+const iconMap: Record<string, string> = {
+  shield: '🛡️',
+  clock: '⏱️',
+  dollar: '💰',
+  wrench: '🔧',
+};
+---
+
+<section class="benefits" aria-labelledby="benefits-heading">
+  <div class="benefits__container">
+    <SectionHeading>
+      <span id="benefits-heading">Why Drivers Trust Us</span>
+    </SectionHeading>
+
+    <div class="benefits__grid">
+      {benefits.map((benefit) => (
+        <div class="benefits__item">
+          <span class="benefits__icon" aria-hidden="true">
+            {iconMap[benefit.icon] || '✓'}
+          </span>
+          <h3 class="benefits__label">{benefit.label}</h3>
+          <p class="benefits__description">{benefit.description}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .benefits {
+    padding: var(--space-xl) 0;
+  }
+
+  .benefits__container {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+  }
+
+  .benefits__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+
+  @media (min-width: 768px) {
+    .benefits__grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .benefits__item {
+    text-align: center;
+    padding: var(--space-md);
+  }
+
+  .benefits__icon {
+    display: block;
+    font-size: 40px;
+    margin-bottom: var(--space-sm);
+  }
+
+  .benefits__label {
+    font-family: var(--font-family);
+    font-size: var(--text-h4);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+    margin: 0 0 var(--space-xs) 0;
+    line-height: var(--line-height-heading);
+  }
+
+  .benefits__description {
+    font-family: var(--font-family);
+    font-size: var(--text-body);
+    font-weight: var(--font-weight-regular);
+    color: var(--color-secondary);
+    margin: 0;
+    line-height: var(--line-height-body);
+  }
+</style>

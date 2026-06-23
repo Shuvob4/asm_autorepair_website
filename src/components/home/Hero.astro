@@ -1,0 +1,125 @@
+---
+/**
+ * Hero — Full-viewport hero section for the homepage.
+ * Displays shop name, tagline, and CTA buttons over a dark-overlaid background image.
+ *
+ * Requirements: 1.1, 1.6
+ */
+import CTAButton from '../shared/CTAButton.astro';
+---
+
+<section class="hero" id="hero-section" aria-label="Hero">
+  <img
+    src="/images/hero-bg.jpg"
+    alt="ASM AUTO Repair workshop with professional automotive equipment"
+    class="hero__bg"
+    width="1920"
+    height="1080"
+    fetchpriority="high"
+    decoding="async"
+  />
+  <div class="hero__overlay"></div>
+  <div class="hero__content container">
+    <h1 class="hero__title">ASM AUTO Repair</h1>
+    <p class="hero__tagline">Toronto's Premier Auto Repair &amp; Maintenance</p>
+    <div class="hero__actions">
+      <CTAButton variant="primary" href="/quote">Get a Free Quote</CTAButton>
+      <CTAButton variant="secondary" href="tel:+13435585301" class="hero__cta-secondary">Call Now</CTAButton>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    overflow: hidden;
+  }
+
+  .hero__bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+  }
+
+  .hero__overlay {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(10, 10, 10, 0.7);
+    z-index: 1;
+  }
+
+  .hero__content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding-block: var(--space-xl);
+  }
+
+  .hero__title {
+    font-family: var(--font-family);
+    font-size: var(--text-h1);
+    font-weight: var(--font-weight-extrabold);
+    line-height: var(--line-height-heading);
+    color: var(--color-white);
+    margin-bottom: var(--space-sm);
+  }
+
+  .hero__tagline {
+    font-family: var(--font-family);
+    font-size: var(--text-h3);
+    font-weight: var(--font-weight-regular);
+    line-height: var(--line-height-heading);
+    color: var(--color-secondary);
+    margin-bottom: var(--space-lg);
+    max-width: 600px;
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Override secondary CTA for dark hero background */
+  .hero__actions :global(.hero__cta-secondary) {
+    color: var(--color-white);
+    border-color: var(--color-white);
+    background-color: transparent;
+  }
+
+  .hero__actions :global(.hero__cta-secondary:hover) {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: var(--color-white);
+  }
+
+  .hero__actions :global(.hero__cta-secondary:focus-visible) {
+    outline-color: var(--color-accent);
+  }
+
+  @media (max-width: 767px) {
+    .hero__actions {
+      flex-direction: column;
+      width: 100%;
+    }
+
+    .hero__actions :global(.cta-button) {
+      width: 100%;
+    }
+
+    .hero__tagline {
+      font-size: var(--text-h4);
+    }
+  }
+</style>

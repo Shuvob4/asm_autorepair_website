@@ -1,0 +1,79 @@
+---
+import { getCollection } from 'astro:content';
+import Card from '../shared/Card.astro';
+import SectionHeading from '../shared/SectionHeading.astro';
+import CTAButton from '../shared/CTAButton.astro';
+
+const services = await getCollection('services');
+const sortedServices = services.sort((a, b) => a.data.order - b.data.order).slice(0, 4);
+---
+
+<section class="services-overview" aria-labelledby="services-heading">
+  <div class="services-overview__container">
+    <SectionHeading>
+      <span id="services-heading">Our Services</span>
+    </SectionHeading>
+
+    <div class="services-overview__grid">
+      {sortedServices.map((service) => (
+        <Card class="services-overview__card">
+          <h3 class="services-overview__title">{service.data.title}</h3>
+          <p class="services-overview__description">{service.data.summary}</p>
+        </Card>
+      ))}
+    </div>
+
+    <div class="services-overview__cta">
+      <CTAButton variant="secondary" href="/services/">
+        View All Services
+      </CTAButton>
+    </div>
+  </div>
+</section>
+
+<style>
+  .services-overview {
+    padding: var(--space-xl) 0;
+  }
+
+  .services-overview__container {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+  }
+
+  .services-overview__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+
+  @media (min-width: 768px) {
+    .services-overview__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .services-overview__title {
+    font-family: var(--font-family);
+    font-size: var(--text-h4);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+    margin: 0 0 var(--space-xs) 0;
+    line-height: var(--line-height-heading);
+  }
+
+  .services-overview__description {
+    font-family: var(--font-family);
+    font-size: var(--text-body);
+    font-weight: var(--font-weight-regular);
+    color: var(--color-secondary);
+    margin: 0;
+    line-height: var(--line-height-body);
+  }
+
+  .services-overview__cta {
+    margin-top: var(--space-lg);
+    text-align: center;
+  }
+</style>

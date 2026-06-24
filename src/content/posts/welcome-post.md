@@ -2,7 +2,7 @@
 title: "Welcome to ASM AUTO Repair"
 publishedDate: 2024-01-15
 excerpt: "Learn about our commitment to quality auto repair service in Toronto."
-featuredImage: "/images/posts/welcome.webp"
+featuredImage: "/images/hero-bg.jpg"
 author: "ASM AUTO Repair"
 draft: false
 ---

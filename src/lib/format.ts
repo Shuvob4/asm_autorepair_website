@@ -89,7 +89,7 @@ export function buildWhatsAppUrl(data: {
   const message = lines.join('\n');
   const encoded = encodeURIComponent(message);
 
-  return `https://wa.me/13435585301?text=${encoded}`;
+  return `https://wa.me/14165168181?text=${encoded}`;
 }
 
 /**

@@ -1,21 +1,21 @@
 import type { Handler, HandlerEvent } from '@netlify/functions';
 
 /**
- * Netlify serverless function to send quote request emails.
+ * Netlify serverless function to handle quote request submissions.
  *
- * Behavior:
- * 1. Accepts POST requests with QuoteRequest JSON body
- * 2. Validates incoming data server-side (defense in depth)
- * 3. If RESEND_API_KEY env var is set, sends email via Resend API
- * 4. If no API key is configured, logs the request and returns 200
- * 5. Always returns 200 (visitor sees success regardless of email outcome)
- * 6. Logs failures for developer review (console.error)
- * 7. Includes CORS headers for the frontend
+ * Features:
+ * 1. Sends notification email to shop (SHOP_EMAIL)
+ * 2. Sends confirmation email to the customer
+ * 3. Logs submission to Google Sheet (for tracking/Excel export)
+ * 4. Always returns 200 to visitor regardless of backend failures
  *
- * Requirements: 7.3, 7.7
+ * Environment variables:
+ * - RESEND_API_KEY: Resend API key for sending emails
+ * - SHOP_EMAIL: Shop notification recipient
+ * - GOOGLE_SHEET_WEBHOOK_URL: Google Apps Script web app URL for Sheet logging
  */
 
-const SHOP_EMAIL = process.env.SHOP_EMAIL || 'info@asmautorepair.ca';
+const SHOP_EMAIL = process.env.SHOP_EMAIL || 'hossainliyana@gmail.com';
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
@@ -69,9 +69,10 @@ function validateQuoteData(data: Record<string, unknown>): { valid: boolean; err
   return { valid: errors.length === 0, errors };
 }
 
-function formatEmailHtml(data: QuoteRequest): string {
+// --- Email to Shop (notification) ---
+function formatShopEmailHtml(data: QuoteRequest): string {
   const lines = [
-    '<h2>New Quote Request from ASM AUTO Repair Website</h2>',
+    '<h2>New Quote Request</h2>',
     '<table style="border-collapse: collapse; width: 100%; max-width: 600px;">',
     `<tr><td style="padding: 8px; border: 1px solid #ddd; font-weight: bold;">Name</td><td style="padding: 8px; border: 1px solid #ddd;">${data.name}</td></tr>`,
     `<tr><td style="padding: 8px; border: 1px solid #ddd; font-weight: bold;">Mobile</td><td style="padding: 8px; border: 1px solid #ddd;">${data.mobile}</td></tr>`,
@@ -90,9 +91,77 @@ function formatEmailHtml(data: QuoteRequest): string {
   }
 
   lines.push('</table>');
-  lines.push('<p style="margin-top: 16px; color: #666;">This quote request was submitted via the ASM AUTO Repair website.</p>');
+  lines.push('<p style="margin-top: 16px; color: #666;">Submitted via ASM AUTO Repair website.</p>');
 
   return lines.join('\n');
+}
+
+// --- Email to Customer (confirmation) ---
+function formatCustomerEmailHtml(data: QuoteRequest): string {
+  return `
+    <div style="font-family: 'Inter', Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #0A0A0A;">
+      <div style="background: #0A0A0A; padding: 24px; text-align: center;">
+        <h1 style="color: #F5C400; font-size: 24px; margin: 0;">ASM AUTO Repair</h1>
+      </div>
+      <div style="padding: 32px 24px;">
+        <h2 style="margin-top: 0;">Hi ${data.name},</h2>
+        <p>Thank you for your quote request! We've received your details and our team will review them shortly.</p>
+        <p><strong>Here's a summary of your request:</strong></p>
+        <table style="border-collapse: collapse; width: 100%; margin: 16px 0;">
+          <tr><td style="padding: 8px; border: 1px solid #EAEAEA; font-weight: bold;">Service</td><td style="padding: 8px; border: 1px solid #EAEAEA;">${data.workType}</td></tr>
+          <tr><td style="padding: 8px; border: 1px solid #EAEAEA; font-weight: bold;">Vehicle</td><td style="padding: 8px; border: 1px solid #EAEAEA;">${data.modelYear} ${data.carBrand} ${data.modelName}</td></tr>
+          ${data.preferredDate ? `<tr><td style="padding: 8px; border: 1px solid #EAEAEA; font-weight: bold;">Preferred Date</td><td style="padding: 8px; border: 1px solid #EAEAEA;">${data.preferredDate}</td></tr>` : ''}
+          ${data.preferredTime ? `<tr><td style="padding: 8px; border: 1px solid #EAEAEA; font-weight: bold;">Preferred Time</td><td style="padding: 8px; border: 1px solid #EAEAEA;">${data.preferredTime}</td></tr>` : ''}
+        </table>
+        <p><strong>What happens next:</strong></p>
+        <ul>
+          <li>Our team will review your request within 1 business day</li>
+          <li>We'll contact you at ${data.mobile} with an estimate</li>
+          <li>No obligation — feel free to ask questions anytime</li>
+        </ul>
+        <p>Need to reach us sooner? Call or WhatsApp us at <a href="tel:+14165168181" style="color: #F5C400;">(416) 516-8181</a></p>
+      </div>
+      <div style="background: #0A0A0A; padding: 16px 24px; text-align: center;">
+        <p style="color: #8B8B8B; font-size: 12px; margin: 0;">ASM AUTO Repair · 296 Brock Ave, Toronto, ON M6K 2M4</p>
+      </div>
+    </div>
+  `;
+}
+
+// --- Log to Google Sheet ---
+async function logToGoogleSheet(data: QuoteRequest): Promise<void> {
+  const webhookUrl = process.env.GOOGLE_SHEET_WEBHOOK_URL;
+  if (!webhookUrl) {
+    console.log('GOOGLE_SHEET_WEBHOOK_URL not configured — skipping sheet logging.');
+    return;
+  }
+
+  try {
+    const response = await fetch(webhookUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        timestamp: new Date().toISOString(),
+        name: data.name,
+        mobile: data.mobile,
+        email: data.email,
+        workType: data.workType,
+        carBrand: data.carBrand,
+        modelName: data.modelName,
+        modelYear: data.modelYear,
+        preferredDate: data.preferredDate || '',
+        preferredTime: data.preferredTime || '',
+      }),
+    });
+
+    if (!response.ok) {
+      console.error('Google Sheet webhook error:', response.status);
+    } else {
+      console.log('Quote logged to Google Sheet for:', data.name);
+    }
+  } catch (error) {
+    console.error('Failed to log to Google Sheet:', error);
+  }
 }
 
 export const handler: Handler = async (event: HandlerEvent) => {
@@ -117,11 +186,10 @@ export const handler: Handler = async (event: HandlerEvent) => {
   try {
     const data = JSON.parse(event.body || '{}');
 
-    // Validate basic fields exist (defense in depth)
+    // Validate
     const validation = validateQuoteData(data);
     if (!validation.valid) {
       console.error('Validation failed:', validation.errors);
-      // Still return 200 — visitor sees success regardless (Requirement 7.7)
       return {
         statusCode: 200,
         headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
@@ -144,9 +212,9 @@ export const handler: Handler = async (event: HandlerEvent) => {
     const resendApiKey = process.env.RESEND_API_KEY;
 
     if (resendApiKey) {
-      // Send email via Resend API
+      // 1. Send notification email to SHOP
       try {
-        const response = await fetch('https://api.resend.com/emails', {
+        const shopResponse = await fetch('https://api.resend.com/emails', {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${resendApiKey}`,
@@ -155,35 +223,60 @@ export const handler: Handler = async (event: HandlerEvent) => {
           body: JSON.stringify({
             from: 'ASM AUTO Repair <noreply@asmautorepair.ca>',
             to: [SHOP_EMAIL],
-            subject: `Quote Request: ${quoteData.workType} — ${quoteData.name}`,
-            html: formatEmailHtml(quoteData),
+            subject: `New Quote: ${quoteData.workType} — ${quoteData.name}`,
+            html: formatShopEmailHtml(quoteData),
             reply_to: quoteData.email,
           }),
         });
 
-        if (!response.ok) {
-          const errorBody = await response.text();
-          console.error('Resend API error:', response.status, errorBody);
+        if (!shopResponse.ok) {
+          console.error('Shop email error:', await shopResponse.text());
         } else {
-          console.log('Quote email sent successfully for:', quoteData.name);
+          console.log('Shop notification email sent for:', quoteData.name);
         }
-      } catch (emailError) {
-        console.error('Failed to send email via Resend:', emailError);
+      } catch (err) {
+        console.error('Failed to send shop email:', err);
+      }
+
+      // 2. Send confirmation email to CUSTOMER
+      try {
+        const customerResponse = await fetch('https://api.resend.com/emails', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${resendApiKey}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            from: 'ASM AUTO Repair <noreply@asmautorepair.ca>',
+            to: [quoteData.email],
+            subject: `Your Quote Request — ASM AUTO Repair`,
+            html: formatCustomerEmailHtml(quoteData),
+            reply_to: SHOP_EMAIL,
+          }),
+        });
+
+        if (!customerResponse.ok) {
+          console.error('Customer email error:', await customerResponse.text());
+        } else {
+          console.log('Customer confirmation email sent to:', quoteData.email);
+        }
+      } catch (err) {
+        console.error('Failed to send customer email:', err);
       }
     } else {
-      // No API key configured — log the request for developer review
-      console.log('RESEND_API_KEY not configured. Quote request received:', JSON.stringify(quoteData, null, 2));
+      console.log('RESEND_API_KEY not configured. Quote received:', JSON.stringify(quoteData, null, 2));
     }
 
-    // Always return 200 — visitor sees success regardless of email outcome
+    // 3. Log to Google Sheet (for quote tracking / Excel export)
+    await logToGoogleSheet(quoteData);
+
     return {
       statusCode: 200,
       headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
       body: JSON.stringify({ success: true }),
     };
   } catch (error) {
-    console.error('Email function error:', error);
-    // Return 200 even on unexpected errors (Requirement 7.7)
+    console.error('Quote function error:', error);
     return {
       statusCode: 200,
       headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
